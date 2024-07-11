@@ -25,7 +25,7 @@ echo "Launch script: $launch_script"
 cat > $launch_script <<EOF
 #!/bin/bash
 #PBS -l select=1
-#PBS -l walltime=00:15:00
+#PBS -l walltime=01:00:00
 #PBS -A CSC250STDA05_CNDA
 #PBS -q workq
 #PBS -N VTK-mTests
