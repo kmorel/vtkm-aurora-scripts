@@ -29,11 +29,19 @@ echo
 echo "###### CLONING REPOS ######"
 echo
 
-git clone -b develop https://github.com/kokkos/kokkos.git src/kokkos
-git clone https://gitlab.kitware.com/vtk/vtk-m.git src/vtk-m
-cd src/vtk-m
-git lfs checkout
-cd ../..
+if [ -d src/kokkos ] ; then
+  echo "Kokkos source directory exists. Skipping."
+else
+  git clone -b develop https://github.com/kokkos/kokkos.git src/kokkos
+fi
+if [ -d src/vtk-m ] ; then
+  echo "VTK-m source directory exists. Skipping."
+else
+  git clone https://gitlab.kitware.com/vtk/vtk-m.git src/vtk-m
+  cd src/vtk-m
+  git lfs checkout
+  cd ../..
+fi
 
 #############################################                                                                                                                                                                    
 # Configure and build Kokkos SYCL                                                                                                                                                                                
