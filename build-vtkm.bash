@@ -50,6 +50,11 @@ echo
 echo "###### CONFIGURING KOKKOS ######"
 echo
 
+# Flag `-DKokkos_ENABLE_ONEDPL=OFF` added to work around bug CMPLRLLVM-60156
+# in the Intel oneAPI DPC++ Library. Basically, the sort function in that
+# library is broken with the IGC_ForceOCLSIMDWidth=16 compiler option. Once
+# this issue is resolved, we can take out that flag.
+
 cd $WRKDIR
 cmake -G Ninja -S src/kokkos -B build/kokkos \
   -DCMAKE_BUILD_TYPE=Release \
@@ -62,6 +67,7 @@ cmake -G Ninja -S src/kokkos -B build/kokkos \
   -DKokkos_ENABLE_TESTS=OFF \
   -DKokkos_ENABLE_SERIAL=ON \
   -DKokkos_ENABLE_SYCL=ON \
+  -DKokkos_ENABLE_ONEDPL=OFF \
   -DKokkos_ARCH_INTEL_PVC=ON \
   -DCMAKE_INSTALL_PREFIX=$WRKDIR/install/kokkos
 
