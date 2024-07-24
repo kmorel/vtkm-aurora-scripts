@@ -1,11 +1,12 @@
 #!/bin/bash
 
-fullscriptpath=`realpath $0`
-scriptdir=`dirname "$fullscriptpath"`
+set -e
+
+scriptdir=`dirname $0`
 . $scriptdir/setup-modules.bash
 
 # Find VTK-m build directory
-vtkm_build_dir=`realpath build/vtkm`
+vtkm_build_dir=$scriptdir/build/vtkm
 if [ \! -d $vtkm_build_dir ] ; then
 	echo "Cannot find VTK-m build dir at $vtkm_build_dir"
 	echo "Make sure you run this script in the same directory as build-vtkm.bash"
@@ -17,7 +18,7 @@ if [ \! -f $vtkm_build_dir/bin/UnitTests_vtkm_cont_testing ] ; then
 fi
 
 # Set up a launch script
-launch_dir=`realpath launch`
+launch_dir=$scriptdir/launch
 mkdir -p $launch_dir
 launch_script=$(mktemp -p $launch_dir --suffix=-vtkmtest.pbs)
 echo "Launch script: $launch_script"
@@ -29,15 +30,15 @@ cat > $launch_script <<EOF
 #PBS -A CSC250STDA05_CNDA
 #PBS -q workq
 #PBS -N VTK-mTests
-#PBS -o $launch_dir/vtkmtest.log
+#PBS -o `realpath $launch_dir/vtkmtest.log`
 #PBS -j oe
 
 # Load modules. Note that this script may be launched non-interactively,
 # so we might need to include /etc/profile to get the module command.
 . /etc/profile
-. $scriptdir/setup-modules.bash
+. `realpath $scriptdir/setup-modules.bash`
 
-cd $vtkm_build_dir
+cd `realpath $vtkm_build_dir`
 ctest .
 EOF
 

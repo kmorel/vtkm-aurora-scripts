@@ -1,8 +1,14 @@
 #!/bin/bash
 
+set -e
+
 fullscriptpath=`realpath $0`
 scriptdir=`dirname "$fullscriptpath"`
-. $scriptdir/setup-modules.bash
+cd $scriptdir
+. ./setup-modules.bash
+
+buildtype=Release
+#buildtype=Debug
 
 # from Renzo on slack 02/01/2024
 export IGC_FunctionCloningThreshold=1
@@ -57,7 +63,7 @@ echo
 
 cd $WRKDIR
 cmake -G Ninja -S src/kokkos -B build/kokkos \
-  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_BUILD_TYPE=$buildtype \
   -DCMAKE_CXX_FLAGS="-fPIC -fp-model=precise -Wno-unused-command-line-argument -Wno-deprecated-declarations -fsycl-device-code-split=per_kernel -fsycl-max-parallel-link-jobs=128 " \
   -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -fsycl-link-huge-device-code" \
   -DCMAKE_CXX_STANDARD=17 \
@@ -88,7 +94,7 @@ echo
 
 cd $WRKDIR
 cmake -G Ninja -S src/vtk-m -B build/vtkm \
-  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_BUILD_TYPE=$buildtype \
   -DCMAKE_CXX_FLAGS="-fPIC -fp-model=precise -Wno-unused-command-line-argument -Wno-deprecated-declarations -fsycl-device-code-split=per_kernel -fsycl-max-parallel-link-jobs=128" \
   -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -fsycl-link-huge-device-code" \
   -DKokkos_DIR=$WRKDIR/install/kokkos/lib64/cmake/Kokkos \
