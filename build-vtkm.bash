@@ -35,15 +35,23 @@ echo
 echo "###### CLONING REPOS ######"
 echo
 
+kokkos_repo=https://github.com/kokkos/kokkos.git
+kokkos_commit=develop
+
+vtkm_repo=https://gitlab.kitware.com/vtk/vtk-m.git
+vtkm_commit=master
+#vtkm_repo=https://gitlab.kitware.com/kmorel/vtk-m.git
+#vtkm_commit=flow-generic-force-vectors
+
 if [ -d src/kokkos ] ; then
   echo "Kokkos source directory exists. Skipping."
 else
-  git clone -b develop https://github.com/kokkos/kokkos.git src/kokkos
+  git clone -b $kokkos_commit $kokkos_repo src/kokkos
 fi
 if [ -d src/vtk-m ] ; then
   echo "VTK-m source directory exists. Skipping."
 else
-  git clone https://gitlab.kitware.com/vtk/vtk-m.git src/vtk-m
+  git clone -b $vtkm_commit $vtkm_repo src/vtk-m
   cd src/vtk-m
   git lfs checkout
   cd ../..
@@ -116,4 +124,3 @@ echo
 
 cd build/vtkm
 ninja
-
