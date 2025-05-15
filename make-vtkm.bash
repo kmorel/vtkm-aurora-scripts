@@ -53,6 +53,7 @@ if [ -d src/vtk-m ] ; then
 else
   git clone -b $vtkm_commit $vtkm_repo src/vtk-m
   cd src/vtk-m
+  git lfs install
   git lfs checkout
   cd ../..
 fi
