@@ -2,7 +2,23 @@
 
 set -e
 
-scriptdir=`dirname $0`
+case `hostname` in
+	aurora-uan-*)
+		echo "Detected on Aurora"
+		queue=EarlyAppAccess
+		;;
+	uan-*)
+		echo "Detected on Sunspot"
+		queue=workq
+		;;
+	*)
+		echo "Cannot determine what host I am on."
+		exit 1
+		;;
+esac
+
+fullscriptpath=`realpath $0`
+scriptdir=`dirname "$fullscriptpath"`
 . $scriptdir/setup-modules.bash
 
 # Find VTK-m build directory
@@ -28,7 +44,7 @@ cat > $launch_script <<EOF
 #PBS -l select=1
 #PBS -l walltime=01:00:00
 #PBS -A CSC250STDA05_CNDA
-#PBS -q workq
+#PBS -q $queue
 #PBS -N VTK-mTests
 #PBS -o `realpath $launch_dir/vtkmtest.log`
 #PBS -j oe
