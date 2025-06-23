@@ -44,7 +44,7 @@ cat > $launch_script <<EOF
 #PBS -l select=1
 #PBS -l walltime=01:00:00
 #PBS -l filesystems=flare_fs
-#PBS -A CSC250STDA05_CNDA
+#PBS -A viskores
 #PBS -q $queue
 #PBS -N ViskoresTests
 #PBS -o `realpath $launch_dir/viskorestest.log`
