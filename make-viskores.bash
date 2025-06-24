@@ -2,6 +2,9 @@
 
 set -e
 
+hostname
+date
+
 fullscriptpath=`realpath $0`
 scriptdir=`dirname "$fullscriptpath"`
 cd $scriptdir
@@ -72,7 +75,6 @@ cd $WRKDIR
 cmake -G Ninja -S src/kokkos -B build/kokkos \
   -DCMAKE_BUILD_TYPE=$buildtype \
   -DCMAKE_CXX_FLAGS="-fPIC -fp-model=precise -Wno-unused-command-line-argument -Wno-deprecated-declarations -fsycl-device-code-split=per_kernel -fsycl-max-parallel-link-jobs=128 " \
-  -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -fsycl-link-huge-device-code" \
   -DCMAKE_CXX_STANDARD=17 \
   -DCMAKE_CXX_EXTENSIONS=OFF \
   -DBUILD_SHARED_LIBS=ON \
@@ -84,12 +86,14 @@ cmake -G Ninja -S src/kokkos -B build/kokkos \
   -DKokkos_ARCH_INTEL_PVC=ON \
   -DCMAKE_INSTALL_PREFIX=$WRKDIR/install/kokkos
 
+#  -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -fsycl-link-huge-device-code" \
+
 echo
 echo "###### BUILDING KOKKOS ######"
 echo
 
 cd build/kokkos
-ninja
+ninja -j8
 ninja install
 
 #############################################
@@ -103,7 +107,6 @@ cd $WRKDIR
 cmake -G Ninja -S src/viskores -B build/viskores \
   -DCMAKE_BUILD_TYPE=$buildtype \
   -DCMAKE_CXX_FLAGS="-fPIC -fp-model=precise -Wno-unused-command-line-argument -Wno-deprecated-declarations -fsycl-device-code-split=per_kernel -fsycl-max-parallel-link-jobs=128" \
-  -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -fsycl-link-huge-device-code" \
   -DKokkos_DIR=$WRKDIR/install/kokkos/lib64/cmake/Kokkos \
   -DViskores_ENABLE_KOKKOS=ON \
   -DViskores_ENABLE_RENDERING=ON \
@@ -115,6 +118,8 @@ cmake -G Ninja -S src/viskores -B build/viskores \
   -DViskores_USE_64BIT_IDS=OFF \
   -DViskores_USE_DOUBLE_PRECISION=ON
 
+#  -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -fsycl-link-huge-device-code" \
+
 # last three settings needed for ascent
 
 echo
@@ -122,4 +127,4 @@ echo "###### BUILDING Viskores ######"
 echo
 
 cd build/viskores
-ninja
+ninja -j8
