@@ -75,6 +75,7 @@ cd $WRKDIR
 cmake -G Ninja -S src/kokkos -B build/kokkos \
   -DCMAKE_BUILD_TYPE=$buildtype \
   -DCMAKE_CXX_FLAGS="-fPIC -fp-model=precise -Wno-unused-command-line-argument -Wno-deprecated-declarations -fsycl-device-code-split=per_kernel -fsycl-max-parallel-link-jobs=128 " \
+  -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -mcmodel=large" \
   -DCMAKE_CXX_STANDARD=17 \
   -DCMAKE_CXX_EXTENSIONS=OFF \
   -DBUILD_SHARED_LIBS=ON \
@@ -107,6 +108,7 @@ cd $WRKDIR
 cmake -G Ninja -S src/viskores -B build/viskores \
   -DCMAKE_BUILD_TYPE=$buildtype \
   -DCMAKE_CXX_FLAGS="-fPIC -fp-model=precise -Wno-unused-command-line-argument -Wno-deprecated-declarations -fsycl-device-code-split=per_kernel -fsycl-max-parallel-link-jobs=128" \
+  -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -mcmodel=large" \
   -DKokkos_DIR=$WRKDIR/install/kokkos/lib64/cmake/Kokkos \
   -DViskores_ENABLE_KOKKOS=ON \
   -DViskores_ENABLE_RENDERING=ON \
@@ -117,8 +119,6 @@ cmake -G Ninja -S src/viskores -B build/viskores \
   -DViskores_USE_DEFAULT_TYPES_FOR_ASCENT=ON \
   -DViskores_USE_64BIT_IDS=OFF \
   -DViskores_USE_DOUBLE_PRECISION=ON
-
-#  -DCMAKE_CXX_FLAGS_DEBUG="-g -O0 -fsycl-link-huge-device-code" \
 
 # last three settings needed for ascent
 
